@@ -8,6 +8,7 @@ using namespace std;
 
 int count = 0;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex2 =PTHREAD_MUTEX_INITIALIZER; 
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER; 
 //该函数增加count数值
 void * creator(void * arg)
@@ -47,26 +48,18 @@ void * consumer(void * arg)
         pthread_cond_wait(&cond,&mutex);
         cout << "end wait" << endl;
     }
-
     count --;
-
     cout << "in consumer count is " << count << endl;
-
     pthread_mutex_unlock(&mutex);
-
     cout << "consumer release lock" << endl;
-    
     return NULL;
-    
 }
-
-
 int main()
 {
     //两个线程，一个生产者线程一个消费者线程
     pthread_t createthread,consumethread;
 
-     pthread_create(&consumethread, NULL, consumer, NULL);
+    pthread_create(&consumethread, NULL, consumer,(void *)" count ");
     pthread_create(&createthread, NULL, creator, NULL);
     
     //主进程等待两个线程结束
