@@ -1,0 +1,8 @@
+myint=12
+myfloat=1.1
+mystr="hello world"
+
+echo $mystr
+echo "  "
+echo $myint
+
