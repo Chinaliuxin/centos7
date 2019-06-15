@@ -10,7 +10,7 @@ using namespace std;
 
 //函数指针,指向任务的处理方法
 typedef int (*call)(int,int);
-
+:
 //封装一个任务处理类
 class Task 
 {
