@@ -1,3 +1,6 @@
+#include <signal.h>
+#include<sys/stat.h>
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -7,7 +10,7 @@
 #include <stdlib.h>
 #include<iostream>
 using namespace std;
-int main_ (int argc1,int argc2 )
+int main_ (const char* argv1,const char* argv2 )
 {
 int fd = socket(AF_INET, SOCK_STREAM, 0);
 if (fd < 0) {
@@ -16,8 +19,8 @@ if (fd < 0) {
 
 struct sockaddr_in addr;
 addr.sin_family = AF_INET;
-addr.sin_addr.s_addr = inet_addr(argc1 );
-addr.sin_port = htons(atoi(argc2));
+addr.sin_addr.s_addr = inet_addr(argv1 );
+addr.sin_port = htons(atoi(argv2));
 int ret = bind(fd, (struct sockaddr*)&addr, sizeof(addr));
 if (ret < 0) {
   perror("bind error ");
@@ -59,7 +62,21 @@ for (;;)
 int main(int argc,char**argv)
 {
   if(argc!=3){cout<<"input ip and port"<<endl;return 0;}
+  pid_t pc=fork();
+  if(pc<0)
+  {
+    perror("fork error \n");
+    exit(1);
+  }
+  if(pc>0){exit(0);}
 
-  main_(argc[1],argc[2]);
+  umask(0);//quanxian   4next
+  setsid();//2 next
+  chdir("/");//  to  root chdir  3next
+  umask(0);//quanxian   4next
+  for(size_t i=0;i<65535;i++)
+    close(i);
+  signal(SIGCHLD,SIG_IGN);
+  main_(argv[1],argv[2]);
   return 0;
 }
