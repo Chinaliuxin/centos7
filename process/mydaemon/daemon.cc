@@ -55,6 +55,8 @@ for (;;)
   const char* hello ="<a href=\"https://github.com/Chinaliuxin\" title=\"open_to liuxin's github\"target=\"_blank\">click the mouse to github</a><a></a>";
   sprintf(buf, "HTTP/1.1 200 OK\nContent-length:%lu\n\n%s", strlen(hello), hello);
   write(client_fd,buf,strlen(buf));
+  close(client_fd);
+  
   //same to    send(client_fd, buf, strlen(buf),0);
 }return 0;
 }
